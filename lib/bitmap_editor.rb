@@ -44,6 +44,9 @@ class Canvas
     # FIXME: raise errors for bad arguments
     column = column.to_i - 1
     row = row.to_i - 1
+    unless /[[:upper:]]/.match(colour)
+      raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
+    end
     if column < 0 or row < 0 or column > @width or row > @height
       raise DrawCommandParameterError, "Cannot draw at #{column+1} #{row+1}"
     end
@@ -67,6 +70,9 @@ class Canvas
     column = column.to_i - 1
     start_row = start_row.to_i - 1
     end_row = end_row.to_i - 1
+    unless /[[:upper:]]/.match(colour)
+      raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
+    end
     # FIXME: check for bad input
     (start_row..end_row).each do |r|
       @rows[r][column] = colour
@@ -123,9 +129,15 @@ class BitmapEditor
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
       when 'L'
         arguments = arguments(line).split
+        if arguments.length != 3
+          raise CommandArgumentError, "Please supply all arguments for the L command on line #{line_number}"
+        end
         @canvas.draw_pixel(*arguments)
       when 'V'
         arguments = arguments(line).split
+        if arguments.length != 4
+          raise CommandArgumentError, "Please supply all arguments for the V command on line #{line_number}"
+        end
         @canvas.draw_vertical_line(*arguments)
       when 'H'
         arguments = arguments(line).split

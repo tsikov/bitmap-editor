@@ -70,6 +70,24 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
+    it "Raises an error when drawing a single pixel if only 1 argument is provided" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nL 1\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CommandArgumentError, "Please supply all arguments for the L command on line 2")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+    it "Raises an error when drawing a single pixel if a colour is not provided" do
+      # note the 4 instead of the capital letter
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nL 1 2 4\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+
     it "Allows drawing of vertical lines" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nV 1 2 3 G\nS"
       output = <<~EOF
@@ -84,7 +102,25 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
-    it "Allows drawing of vertical lines" do
+    it "Raises an error when drawing vertical lines if only 3 arguments are provided" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nV 1 2 3\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CommandArgumentError, "Please supply all arguments for the V command on line 2")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+    it "Raises an error when drawing vertical lines if a colour is not provided" do
+      # note the 4 instead of the capital letter
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nV 1 2 3 4\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+
+    it "Allows drawing of horizontal lines" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 G\nS"
       output = <<~EOF
       OOOO
