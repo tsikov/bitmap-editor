@@ -7,6 +7,8 @@ class CanvasSizeNotSpecifiedError < StandardError; end
 class CanvasSizeAlreadySpecified < StandardError; end
 class CanvasSizeParameterError < StandardError; end
 class DrawCommandParameterError < StandardError; end
+class ColourNotProvidedError < StandardError; end
+class CommandArgumentError < StandardError; end
 
 class Canvas
   attr_accessor :rows
@@ -52,6 +54,9 @@ class Canvas
     start_column = start_column.to_i - 1
     end_column = end_column.to_i - 1
     row = row.to_i - 1
+    unless /[[:upper:]]/.match(colour)
+      raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
+    end
     # FIXME: check for bad input
     (start_column..end_column).each do |c|
       @rows[row][c] = colour
@@ -124,6 +129,9 @@ class BitmapEditor
         @canvas.draw_vertical_line(*arguments)
       when 'H'
         arguments = arguments(line).split
+        if arguments.length != 4
+          raise CommandArgumentError, "Please supply all arguments for the H command on line #{line_number}"
+        end
         @canvas.draw_horizontal_line(*arguments)
       when 'C'
         @canvas.clear

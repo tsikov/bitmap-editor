@@ -98,6 +98,23 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
+    it "Raises an error when drawing horizontal lines if only 3 arguments are provided" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CommandArgumentError, "Please supply all arguments for the H command on line 2")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+    it "Raises an error when drawing horizontal lines if a colour is not provided" do
+      # note the 4 instead of the capital letter
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 4\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
     it "Can clear the canvas after drawing" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 G\nC\nS"
       output = <<~EOF
