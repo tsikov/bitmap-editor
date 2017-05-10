@@ -9,6 +9,9 @@ class DrawCommandParameterError < StandardError; end
 class Canvas
   attr_accessor :rows
   def initialize(width, height)
+    # handles both strings and numbers
+    #raise CanvasSizeParameterError, "Width must be an integer, float given" unless Float(width) % 1 == 0
+    #raise CanvasSizeParameterError, "Height must be an integer, float given" unless Float(height) % 1 == 0
     unless [width, height].all? { |dim| dim.is_a?(Integer) }
       raise CanvasSizeParameterError, "Width and height must be integers"
     end
@@ -26,6 +29,7 @@ class Canvas
   end
 
   def draw_pixel(column, row, colour)
+    # FIXME: raise errors for bad arguments
     column = column.to_i - 1
     row = row.to_i - 1
     if column < 0 or row < 0 or column > @width or row > @height
@@ -52,17 +56,19 @@ class BitmapEditor
     raise NoFileError, "Please supply a file" if file_name.nil?
     raise FileNotFoundError, "Please provide the correct file" unless File.exists?(file_name)
 
+    # We can now safely open the file
+    file = File.open(file_name, "r")
+
     # First step: set the canvas
-    file = File.open(file_name)
     first_line =  file.readline.chomp
     if command(first_line) != "I"
       raise CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command"
     end
 
     # Canvas.new expects integers as parameters
+    # FIXME: let's adopt the conventions that BE passes strings and Canvas tries to convert them, handle them, etc...
     canvas_dimentions = arguments(first_line).split.map(&:to_i)
     raise CanvasSizeParameterError, "Specify width and height of canvas" if canvas_dimentions.length != 2
-
     @canvas = Canvas.new(*canvas_dimentions)
 
     file.each_with_index do |line, line_number|

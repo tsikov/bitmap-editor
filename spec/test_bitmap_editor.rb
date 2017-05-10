@@ -51,6 +51,9 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.not_to raise_error
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
     it "Raises an error if tries to draw outside of canvas" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nL 5 5 R\nS"
       expect {
@@ -64,6 +67,7 @@ describe BitmapEditor do
       be = BitmapEditor.new
       be.run "spec/testfile.txt"
       expect(be.canvas.rows[1][1]).to eq("R")
+      delete_file_if_exists "spec/testfile.txt"
     end
   end
 
