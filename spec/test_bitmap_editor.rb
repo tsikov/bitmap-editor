@@ -112,6 +112,20 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
+    it "Data after the clear command is ignored" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 G\nC bla bla\nS"
+      output = <<~EOF
+      OOOO
+      OOOO
+      OOOO
+      EOF
+      expect {
+        be = BitmapEditor.new
+        be.run "spec/testfile.txt"
+      }.to output(output).to_stdout
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
     it "Can draw canvas to STDOUT" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nS"
       output = <<~EOF
