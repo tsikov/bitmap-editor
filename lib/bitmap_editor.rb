@@ -28,6 +28,9 @@ class Canvas
     }
   end
 
+  def pixel_at(column, row)
+    @rows[row-1][column-1]
+  end
   def draw_pixel(column, row, colour)
     # FIXME: raise errors for bad arguments
     column = column.to_i - 1

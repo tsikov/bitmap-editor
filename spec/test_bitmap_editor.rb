@@ -103,11 +103,19 @@ describe BitmapEditor do
       }.to raise_error(CanvasSizeParameterError, "Width and height cannot be bigger than 250")
     end
 
+    context "#pixel_at" do
+      it "should give us the pixel at column, row" do
+        canvas = Canvas.new(3, 2)
+        canvas.rows = [[0, 1, 2], [3, 4, 5]]
+        expect(canvas.pixel_at(1, 2)).to eq(3)
+      end
+    end
+
     context "#draw_pixel" do
       it "should draw pixels" do
         canvas = Canvas.new(4, 3)
         canvas.draw_pixel(1, 2, "B")
-        expect(canvas.rows[1][0]).to eq("B")
+        expect(canvas.pixel_at(1, 2)).to eq("B")
       end
     end
 
