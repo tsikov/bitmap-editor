@@ -23,6 +23,12 @@ class Canvas
       Array.new(width, "O")
     }
   end
+
+  def draw_pixel(column, row, colour)
+    column = column.to_i - 1
+    row = row.to_i - 1
+    @rows[row][column] = colour
+  end
 end
 
 class BitmapEditor
@@ -62,6 +68,9 @@ class BitmapEditor
       case command
       when 'I'
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
+      when 'L'
+        arguments = arguments(line).split
+        @canvas.draw_pixel(*arguments)
       when 'S'
       else
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"

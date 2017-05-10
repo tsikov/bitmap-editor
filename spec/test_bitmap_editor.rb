@@ -52,6 +52,13 @@ describe BitmapEditor do
         BitmapEditor.new.run "spec/testfile.txt"
       }.not_to raise_error
     end
+
+    it "Allows drawing of single pixels" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nL 2 2 R\nS"
+      be = BitmapEditor.new
+      be.run "spec/testfile.txt"
+      expect(be.canvas.rows[1][1]).to eq("R")
+    end
   end
 
   context "Canvas" do
