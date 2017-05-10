@@ -83,6 +83,20 @@ describe BitmapEditor do
       }.to output(output).to_stdout
       delete_file_if_exists "spec/testfile.txt"
     end
+
+    it "Can draw canvas to STDOUT" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nS"
+      output = <<~EOF
+      OOOO
+      OOOO
+      OOOO
+      EOF
+      expect {
+        be = BitmapEditor.new
+        be.run "spec/testfile.txt"
+      }.to output(output).to_stdout
+      delete_file_if_exists "spec/testfile.txt"
+    end
   end
 
   context "Canvas" do

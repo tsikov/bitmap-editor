@@ -41,6 +41,10 @@ class Canvas
     end
     @rows[row][column] = colour
   end
+
+  def print
+    @rows.each { |r| puts r.join }
+  end
 end
 
 class BitmapEditor
@@ -88,6 +92,7 @@ class BitmapEditor
       when 'V'
         # do nothing for now
       when 'S'
+        @canvas.print
       else
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"
       end
