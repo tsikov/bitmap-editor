@@ -99,6 +99,14 @@ describe BitmapEditor do
       }.to raise_error(CanvasSizeParameterError, "Width and height cannot be bigger than 250")
     end
 
+    context "#draw_pixel" do
+      it "should draw pixels" do
+        canvas = Canvas.new(4, 3)
+        canvas.draw_pixel(1, 2, "B")
+        expect(canvas.rows[1][0]).to eq("B")
+      end
+    end
+
     it "Should create itself on initialization with the right dimentions" do
       canvas = Canvas.new(2, 3)
       expect(canvas.rows.length).to eq(3)    # height
