@@ -4,6 +4,7 @@ class UnknownCommandError < StandardError; end
 class CanvasSizeNotSpecifiedError < StandardError; end
 class CanvasSizeAlreadySpecified < StandardError; end
 class CanvasSizeParameterError < StandardError; end
+class DrawCommandParameterError < StandardError; end
 
 class Canvas
   attr_accessor :rows
@@ -27,6 +28,9 @@ class Canvas
   def draw_pixel(column, row, colour)
     column = column.to_i - 1
     row = row.to_i - 1
+    if column < 1 or row < 1 or column > @width or row > @height
+      raise DrawCommandParameterError, "Cannot draw at #{column+1} #{row+1}"
+    end
     @rows[row][column] = colour
   end
 end
