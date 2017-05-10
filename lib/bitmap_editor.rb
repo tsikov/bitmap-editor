@@ -31,6 +31,7 @@ class Canvas
   def pixel_at(column, row)
     @rows[row-1][column-1]
   end
+
   def draw_pixel(column, row, colour)
     # FIXME: raise errors for bad arguments
     column = column.to_i - 1
@@ -84,6 +85,8 @@ class BitmapEditor
       when 'L'
         arguments = arguments(line).split
         @canvas.draw_pixel(*arguments)
+      when 'V'
+        # do nothing for now
       when 'S'
       else
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"
