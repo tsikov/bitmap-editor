@@ -30,22 +30,6 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
-    it "Raises an error if the canvas size command has illegal parameters." do
-      # Only one parameter
-      create_file_with_contents "spec/testfile.txt", "I 4\nS"
-      expect {
-        BitmapEditor.new.run "spec/testfile.txt"
-      }.to raise_error(CanvasSizeParameterError, "Specify width and height of canvas")
-      delete_file_if_exists "spec/testfile.txt"
-
-      # Non-number as a parameter
-      create_file_with_contents "spec/testfile.txt", "I 4 X\nS"
-      expect {
-        BitmapEditor.new.run "spec/testfile.txt"
-      }.to raise_error(CanvasSizeParameterError, "Width and height cannot be non-numbers or 0")
-      delete_file_if_exists "spec/testfile.txt"
-    end
-
     it "Raises an error if unknown command is encountered." do
       create_file_with_contents "spec/testfile.txt", "I 2 4\nX 4 3"
       expect {
@@ -62,6 +46,52 @@ describe BitmapEditor do
     end
   end
 
-  describe "#execute" do
+  context "Canvas" do
+    it "Raises an error if the canvas size command has illegal parameters." do
+      # Only one parameter
+      create_file_with_contents "spec/testfile.txt", "I 4\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CanvasSizeParameterError, "Specify width and height of canvas")
+      delete_file_if_exists "spec/testfile.txt"
+
+      # Non-number as a parameter
+      create_file_with_contents "spec/testfile.txt", "I 4 X\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CanvasSizeParameterError, "Width and height cannot be non-numbers or less than 1")
+      delete_file_if_exists "spec/testfile.txt"
+
+      # Negative number
+      create_file_with_contents "spec/testfile.txt", "I -2 2"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CanvasSizeParameterError, "Width and height cannot be non-numbers or less than 1")
+      delete_file_if_exists "spec/testfile.txt"
+
+      # Canvas size too big
+      create_file_with_contents "spec/testfile.txt", "I 251 250"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CanvasSizeParameterError, "Width and height cannot be bigger than 250")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+    it "Should create itself on initialization with the right dimentions" do
+      create_file_with_contents "spec/testfile.txt", "I 2 3"
+      be = BitmapEditor.new
+      be.run "spec/testfile.txt"
+      expect(be.canvas.rows.length).to eq(3)    # height
+      expect(be.canvas.rows[0].length).to eq(2) # width
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+    it "Should be white by default" do
+      create_file_with_contents "spec/testfile.txt", "I 2 2"
+      be = BitmapEditor.new
+      be.run "spec/testfile.txt"
+      expect(be.canvas.rows.flatten.all? { |pixel| pixel == 'O' }).to be true
+      delete_file_if_exists "spec/testfile.txt"
+    end
   end
 end

@@ -1,5 +1,3 @@
-require 'pry'
-
 class NoFileError < StandardError; end
 class FileNotFoundError < StandardError; end
 class UnknownCommandError < StandardError; end
@@ -7,7 +5,21 @@ class CanvasSizeNotSpecifiedError < StandardError; end
 class CanvasSizeParameterError < StandardError; end
 
 class Canvas
-  def initialize(rows, cols)
+  attr_accessor :rows
+  def initialize(width, height)
+    # to_i converts characters to 0, so we don't need to check explicitly for that beforehand
+    if [width, height].any? { |dim| dim < 1 }
+      raise CanvasSizeParameterError, "Width and height cannot be non-numbers or less than 1"
+    end
+    if [width, height].any? { |dim| dim > 250 }
+      raise CanvasSizeParameterError, "Width and height cannot be bigger than 250"
+    end
+    # TODO We do NOT check if the canvas is too big. Perhaps we should?
+    @height = height
+    @width = width
+    @rows = Array.new(height) {
+      Array.new(width, "O")
+    }
   end
 end
 
@@ -38,10 +50,6 @@ class BitmapEditor
     canvas_dimentions = arguments(first_line).split.map(&:to_i)
     raise CanvasSizeParameterError, "Specify width and height of canvas" if canvas_dimentions.length != 2
 
-    # to_i converts characters to 0, so we don't need to check explicitly for that beforehand
-    if canvas_dimentions.any? { |dim| dim == 0 }
-      raise CanvasSizeParameterError, "Width and height cannot be non-numbers or 0"
-    end
 
     @canvas = Canvas.new(*canvas_dimentions)
 
@@ -52,10 +60,11 @@ class BitmapEditor
       when 'I'
         puts "do nothing for now"
       when 'S'
-          puts "There is no image"
+        puts "There is no image"
       else
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number+1}"
       end
     end
   end
 end
+
