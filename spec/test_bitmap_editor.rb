@@ -30,6 +30,14 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
+    it "Raises an error if the canvas is initialized more than once" do
+      create_file_with_contents "spec/testfile.txt", "I 2 4\nI 4 3\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line 2")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
     it "Raises an error if unknown command is encountered." do
       create_file_with_contents "spec/testfile.txt", "I 2 4\nX 4 3"
       expect {

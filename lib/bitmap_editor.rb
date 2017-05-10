@@ -2,6 +2,7 @@ class NoFileError < StandardError; end
 class FileNotFoundError < StandardError; end
 class UnknownCommandError < StandardError; end
 class CanvasSizeNotSpecifiedError < StandardError; end
+class CanvasSizeAlreadySpecified < StandardError; end
 class CanvasSizeParameterError < StandardError; end
 
 class Canvas
@@ -54,14 +55,16 @@ class BitmapEditor
 
     @canvas = Canvas.new(*canvas_dimentions)
 
-    File.open(file_name).each_with_index do |line, line_number|
+    file.each_with_index do |line, line_number|
       command = command(line)
+      line_number += 2 # we add 1 because we already too the first line, and another 1, because humans count from 1
 
       case command
       when 'I'
+        raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
       when 'S'
       else
-        raise UnknownCommandError, "Unknown command #{command} on line #{line_number+1}"
+        raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"
       end
     end
   end
