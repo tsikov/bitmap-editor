@@ -23,8 +23,12 @@ class Canvas
     end
     @height = height
     @width = width
-    @rows = Array.new(height) {
-      Array.new(width, "O")
+    initialize_canvas
+  end
+
+  def initialize_canvas
+    @rows = Array.new(@height) {
+      Array.new(@width, "O")
     }
   end
 
@@ -60,6 +64,10 @@ class Canvas
     (start_row..end_row).each do |r|
       @rows[r][column] = colour
     end
+  end
+
+  def clear
+    initialize_canvas
   end
 
   def print
@@ -115,6 +123,8 @@ class BitmapEditor
       when 'H'
         arguments = arguments(line).split
         @canvas.draw_horizontal(*arguments)
+      when 'C'
+        @canvas.clear
       when 'S'
         @canvas.print
       else
