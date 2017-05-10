@@ -84,6 +84,20 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
+    it "Allows drawing of vertical lines" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 G\nS"
+      output = <<~EOF
+      OOOO
+      OOOO
+      GGOO
+      EOF
+      expect {
+        be = BitmapEditor.new
+        be.run "spec/testfile.txt"
+      }.to output(output).to_stdout
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
     it "Can draw canvas to STDOUT" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nS"
       output = <<~EOF
