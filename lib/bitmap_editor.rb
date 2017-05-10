@@ -7,7 +7,9 @@ class CanvasSizeParameterError < StandardError; end
 class Canvas
   attr_accessor :rows
   def initialize(width, height)
-    # to_i converts characters to 0, so we don't need to check explicitly for that beforehand
+    unless [width, height].all? { |dim| dim.is_a?(Integer) }
+      raise CanvasSizeParameterError, "Width and height must be integers"
+    end
     if [width, height].any? { |dim| dim < 1 }
       raise CanvasSizeParameterError, "Width and height cannot be non-numbers or less than 1"
     end
@@ -47,9 +49,9 @@ class BitmapEditor
       raise CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command"
     end
 
+    # Canvas.new expects integers as parameters
     canvas_dimentions = arguments(first_line).split.map(&:to_i)
     raise CanvasSizeParameterError, "Specify width and height of canvas" if canvas_dimentions.length != 2
-
 
     @canvas = Canvas.new(*canvas_dimentions)
 
