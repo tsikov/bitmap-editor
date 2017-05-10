@@ -42,6 +42,16 @@ class Canvas
     @rows[row][column] = colour
   end
 
+  def draw_vertical(column, start_row, end_row, colour)
+    column = column.to_i - 1
+    start_row = start_row.to_i - 1
+    end_row = end_row.to_i - 1
+    # FIXME: check for bad input
+    (start_row..end_row).each do |r|
+      @rows[r][column] = colour
+    end
+  end
+
   def print
     @rows.each { |r| puts r.join }
   end
@@ -90,7 +100,8 @@ class BitmapEditor
         arguments = arguments(line).split
         @canvas.draw_pixel(*arguments)
       when 'V'
-        # do nothing for now
+        arguments = arguments(line).split
+        @canvas.draw_vertical(*arguments)
       when 'S'
         @canvas.print
       else
