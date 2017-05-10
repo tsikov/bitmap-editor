@@ -38,7 +38,7 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
-    xit "Doesn't rise an error if all commands are legal" do
+    it "Doesn't rise an error if all commands are legal" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"

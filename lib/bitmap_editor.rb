@@ -16,7 +16,6 @@ class Canvas
     if [width, height].any? { |dim| dim > 250 }
       raise CanvasSizeParameterError, "Width and height cannot be bigger than 250"
     end
-    # TODO We do NOT check if the canvas is too big. Perhaps we should?
     @height = height
     @width = width
     @rows = Array.new(height) {
@@ -60,9 +59,7 @@ class BitmapEditor
 
       case command
       when 'I'
-        puts "do nothing for now"
       when 'S'
-        puts "There is no image"
       else
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number+1}"
       end
