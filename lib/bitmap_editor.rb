@@ -1,3 +1,5 @@
+require 'pry'
+
 class NoFileError < StandardError; end
 class FileNotFoundError < StandardError; end
 class UnknownCommandError < StandardError; end
@@ -46,7 +48,7 @@ class Canvas
     @rows[row][column] = colour
   end
 
-  def draw_horizontal(start_column, end_column, row, colour)
+  def draw_horizontal_line(start_column, end_column, row, colour)
     start_column = start_column.to_i - 1
     end_column = end_column.to_i - 1
     row = row.to_i - 1
@@ -56,7 +58,7 @@ class Canvas
     end
   end
 
-  def draw_vertical(column, start_row, end_row, colour)
+  def draw_vertical_line(column, start_row, end_row, colour)
     column = column.to_i - 1
     start_row = start_row.to_i - 1
     end_row = end_row.to_i - 1
@@ -119,10 +121,10 @@ class BitmapEditor
         @canvas.draw_pixel(*arguments)
       when 'V'
         arguments = arguments(line).split
-        @canvas.draw_vertical(*arguments)
+        @canvas.draw_vertical_line(*arguments)
       when 'H'
         arguments = arguments(line).split
-        @canvas.draw_horizontal(*arguments)
+        @canvas.draw_horizontal_line(*arguments)
       when 'C'
         @canvas.clear
       when 'S'
