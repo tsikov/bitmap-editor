@@ -207,6 +207,20 @@ describe BitmapEditor do
       }.to output(output).to_stdout
       delete_file_if_exists "spec/testfile.txt"
     end
+
+    it "Can draw multiple drawing commands" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nL 1 1 R\nV 2 2 3 G\nS"
+      output = <<~EOF
+      ROOO
+      OGOO
+      OGOO
+      EOF
+      expect {
+        be = BitmapEditor.new
+        be.run "spec/testfile.txt"
+      }.to output(output).to_stdout
+      delete_file_if_exists "spec/testfile.txt"
+    end
   end
 end
 
