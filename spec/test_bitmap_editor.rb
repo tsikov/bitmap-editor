@@ -58,7 +58,7 @@ describe BitmapEditor do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nL 5 5 R\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
-      }.to raise_error(DrawCommandParameterError, "Cannot draw at 5 5")
+      }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 5 5")
       delete_file_if_exists "spec/testfile.txt"
     end
 
@@ -119,6 +119,13 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
+    it "Raises an error if the user tries to draw outside of canvas with a vertical line" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nV 1 2 5 R\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 1 2 5")
+      delete_file_if_exists "spec/testfile.txt"
+    end
 
     it "Allows drawing of horizontal lines" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 G\nS"
@@ -148,6 +155,14 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
+    it "Raises an error if the user tries to draw outside of canvas with a horizontal line" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 5 R\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 1 2 5")
       delete_file_if_exists "spec/testfile.txt"
     end
 

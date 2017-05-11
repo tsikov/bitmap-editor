@@ -6,7 +6,7 @@ class UnknownCommandError < StandardError; end
 class CanvasSizeNotSpecifiedError < StandardError; end
 class CanvasSizeAlreadySpecified < StandardError; end
 class CanvasSizeParameterError < StandardError; end
-class DrawCommandParameterError < StandardError; end
+class DrawingOutOfCanvasError < StandardError; end
 class ColourNotProvidedError < StandardError; end
 class CommandArgumentError < StandardError; end
 
@@ -48,7 +48,7 @@ class Canvas
       raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
     end
     if column < 0 or row < 0 or column > @width or row > @height
-      raise DrawCommandParameterError, "Cannot draw at #{column+1} #{row+1}"
+      raise DrawingOutOfCanvasError, "Cannot draw at #{column+1} #{row+1}"
     end
     @rows[row][column] = colour
   end
@@ -59,6 +59,10 @@ class Canvas
     row = row.to_i - 1
     unless /[[:upper:]]/.match(colour)
       raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
+    end
+    if start_column < 0 or end_column < 0 or row < 0 or
+        start_column > @width or end_column > @width or row > @height
+      raise DrawingOutOfCanvasError, "Cannot draw at #{start_column+1} #{end_column+1} #{row+1}"
     end
     # FIXME: check for bad input
     (start_column..end_column).each do |c|
@@ -72,6 +76,10 @@ class Canvas
     end_row = end_row.to_i - 1
     unless /[[:upper:]]/.match(colour)
       raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
+    end
+    if column < 0 or start_row < 0 or end_row < 0 or
+        column > @width or start_row > @height or end_row > @height
+      raise DrawingOutOfCanvasError, "Cannot draw at #{column+1} #{start_row+1} #{end_row+1}"
     end
     # FIXME: check for bad input
     (start_row..end_row).each do |r|
