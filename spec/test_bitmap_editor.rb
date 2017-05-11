@@ -38,7 +38,7 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
-    it "Raises an error if unknown command is encountered." do
+    it "Raises an error if an unknown command is encountered." do
       create_file_with_contents "spec/testfile.txt", "I 2 4\nX 4 3"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
@@ -47,14 +47,14 @@ describe BitmapEditor do
     end
 
     it "Doesn't rise an error if all commands are legal" do
-      create_file_with_contents "spec/testfile.txt", "I 4 3\nS"
+      create_file_with_contents "spec/testfile.txt", "I 4 3"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.not_to raise_error
       delete_file_if_exists "spec/testfile.txt"
     end
 
-    it "Raises an error if the user tries to draw outside of canvas" do
+    it "Raises an error if the user tries to draw outside the canvas" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nL 5 5 R\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
@@ -64,9 +64,15 @@ describe BitmapEditor do
 
     it "Allows drawing of single pixels" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nL 2 2 R\nS"
-      be = BitmapEditor.new
-      be.run "spec/testfile.txt"
-      expect(be.canvas.rows[1][1]).to eq("R")
+      output = <<~EOF
+      OOOO
+      OROO
+      OOOO
+      EOF
+      expect {
+        be = BitmapEditor.new
+        be.run "spec/testfile.txt"
+      }.to output(output).to_stdout
       delete_file_if_exists "spec/testfile.txt"
     end
 
@@ -86,7 +92,6 @@ describe BitmapEditor do
       }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
       delete_file_if_exists "spec/testfile.txt"
     end
-
 
     it "Allows drawing of vertical lines" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nV 1 2 3 G\nS"
@@ -119,7 +124,7 @@ describe BitmapEditor do
       delete_file_if_exists "spec/testfile.txt"
     end
 
-    it "Raises an error if the user tries to draw outside of canvas with a vertical line" do
+    it "Raises an error if the user tries to draw outside the canvas with a vertical line" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nV 1 2 5 R\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
