@@ -13,6 +13,10 @@ end
 
 describe BitmapEditor do
   describe "#run" do
+    after(:each) do
+      delete_file_if_exists "spec/testfile.txt"
+    end
+
     it "Raises an error if no file or a wrong file is given." do
       expect {
         BitmapEditor.new.run nil
@@ -27,7 +31,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error if the canvas is initialized more than once" do
@@ -35,7 +38,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line 2")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error if an unknown command is encountered." do
@@ -43,7 +45,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(UnknownCommandError, "Unknown command X on line 2")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Doesn't rise an error if all commands are legal" do
@@ -51,7 +52,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.not_to raise_error
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error if the user tries to draw outside the canvas" do
@@ -59,7 +59,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 5 5")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Allows drawing of single pixels" do
@@ -73,7 +72,6 @@ describe BitmapEditor do
         be = BitmapEditor.new
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error when drawing a single pixel if only 1 argument is provided" do
@@ -81,7 +79,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(CommandArgumentError, "Please supply all arguments for the L command on line 2")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error when drawing a single pixel if a colour is not provided" do
@@ -90,7 +87,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Allows drawing of vertical lines" do
@@ -104,7 +100,6 @@ describe BitmapEditor do
         be = BitmapEditor.new
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error when drawing vertical lines if only 3 arguments are provided" do
@@ -112,7 +107,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(CommandArgumentError, "Please supply all arguments for the V command on line 2")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error when drawing vertical lines if a colour is not provided" do
@@ -121,7 +115,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error if the user tries to draw outside the canvas with a vertical line" do
@@ -129,7 +122,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 1 2 5")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Allows drawing of horizontal lines" do
@@ -143,7 +135,6 @@ describe BitmapEditor do
         be = BitmapEditor.new
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error when drawing horizontal lines if only 3 arguments are provided" do
@@ -151,7 +142,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(CommandArgumentError, "Please supply all arguments for the H command on line 2")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error when drawing horizontal lines if a colour is not provided" do
@@ -160,7 +150,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Raises an error if the user tries to draw outside of canvas with a horizontal line" do
@@ -168,7 +157,6 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 1 2 5")
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Can clear the canvas after drawing" do
@@ -182,7 +170,6 @@ describe BitmapEditor do
         be = BitmapEditor.new
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Data after the clear command is ignored" do
@@ -196,7 +183,6 @@ describe BitmapEditor do
         be = BitmapEditor.new
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Can draw canvas to STDOUT" do
@@ -210,7 +196,6 @@ describe BitmapEditor do
         be = BitmapEditor.new
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
-      delete_file_if_exists "spec/testfile.txt"
     end
 
     it "Can draw multiple drawing commands" do
@@ -224,7 +209,6 @@ describe BitmapEditor do
         be = BitmapEditor.new
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
-      delete_file_if_exists "spec/testfile.txt"
     end
   end
 end
