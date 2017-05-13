@@ -3,7 +3,7 @@ class FileNotFoundError < StandardError; end
 class UnknownCommandError < StandardError; end
 class CanvasSizeNotSpecifiedError < StandardError; end
 class CanvasSizeAlreadySpecified < StandardError; end
-class CanvasSizeParameterError < StandardError; end
+class CanvasSizeArgumentError < StandardError; end
 class DrawingOutOfCanvasError < StandardError; end
 class ColourNotProvidedError < StandardError; end
 class CommandArgumentError < StandardError; end
@@ -12,13 +12,13 @@ class Canvas
   attr_accessor :rows
   def initialize(width, height)
     unless [width, height].all? { |dim| dim.is_a?(Integer) }
-      raise CanvasSizeParameterError, "Width and height must be integers"
+      raise CanvasSizeArgumentError, "Width and height must be integers"
     end
     if [width, height].any? { |dim| dim < 1 }
-      raise CanvasSizeParameterError, "Width and height cannot be non-numbers or less than 1"
+      raise CanvasSizeArgumentError, "Width and height cannot be non-numbers or less than 1"
     end
     if [width, height].any? { |dim| dim > 250 }
-      raise CanvasSizeParameterError, "Width and height cannot be bigger than 250"
+      raise CanvasSizeArgumentError, "Width and height cannot be bigger than 250"
     end
     @height = height
     @width = width
@@ -116,7 +116,7 @@ class BitmapEditor
     end
 
     canvas_dimentions = arguments(first_line).split.map(&:to_i)
-    raise CanvasSizeParameterError, "Specify width and height of canvas" if canvas_dimentions.length != 2
+    raise CanvasSizeArgumentError, "Specify width and height of canvas" if canvas_dimentions.length != 2
     @canvas = Canvas.new(*canvas_dimentions)
 
     file.each_with_index do |line, line_number|
