@@ -1,3 +1,3 @@
-require 'bitmap_editor/errors'
-require 'bitmap_editor/canvas'
-require 'bitmap_editor/bitmap_editor'
+require './lib/bitmap_editor/errors'
+require './lib/bitmap_editor/canvas'
+require './lib/bitmap_editor/bitmap_editor'
