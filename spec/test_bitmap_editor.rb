@@ -59,6 +59,11 @@ describe BitmapEditor do
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 5 5")
+
+      create_file_with_contents "spec/testfile.txt", "I 2 4\nL 3 3 G\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(DrawingOutOfCanvasError, "Cannot draw at 3 3")
     end
 
     it "Allows drawing of single pixels" do

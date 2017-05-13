@@ -26,47 +26,46 @@ class Canvas
   end
 
   def draw_pixel(column, row, colour)
-    # FIXME: raise errors for bad arguments
-    column = column.to_i - 1
-    row = row.to_i - 1
+    column = column.to_i
+    row = row.to_i
     unless /[[:upper:]]/.match(colour)
       raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
     end
-    if column < 0 or row < 0 or column > @width or row > @height
-      raise DrawingOutOfCanvasError, "Cannot draw at #{column+1} #{row+1}"
+    if column < 1 or row < 1 or column > @width or row > @height
+      raise DrawingOutOfCanvasError, "Cannot draw at #{column} #{row}"
     end
-    @rows[row][column] = colour
+    @rows[row-1][column-1] = colour
   end
 
   def draw_horizontal_line(start_column, end_column, row, colour)
-    start_column = start_column.to_i - 1
-    end_column = end_column.to_i - 1
-    row = row.to_i - 1
+    start_column = start_column.to_i
+    end_column = end_column.to_i
+    row = row.to_i
     unless /[[:upper:]]/.match(colour)
       raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
     end
-    if start_column < 0 or end_column < 0 or row < 0 or
+    if start_column < 1 or end_column < 1 or row < 1 or
         start_column > @width or end_column > @width or row > @height
-      raise DrawingOutOfCanvasError, "Cannot draw at #{start_column+1} #{end_column+1} #{row+1}"
+      raise DrawingOutOfCanvasError, "Cannot draw at #{start_column} #{end_column} #{row}"
     end
     (start_column..end_column).each do |c|
-      @rows[row][c] = colour
+      @rows[row-1][c-1] = colour
     end
   end
 
   def draw_vertical_line(column, start_row, end_row, colour)
-    column = column.to_i - 1
-    start_row = start_row.to_i - 1
-    end_row = end_row.to_i - 1
+    column = column.to_i
+    start_row = start_row.to_i
+    end_row = end_row.to_i
     unless /[[:upper:]]/.match(colour)
       raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
     end
-    if column < 0 or start_row < 0 or end_row < 0 or
+    if column < 1 or start_row < 1 or end_row < 1 or
         column > @width or start_row > @height or end_row > @height
-      raise DrawingOutOfCanvasError, "Cannot draw at #{column+1} #{start_row+1} #{end_row+1}"
+      raise DrawingOutOfCanvasError, "Cannot draw at #{column} #{start_row} #{end_row}"
     end
     (start_row..end_row).each do |r|
-      @rows[r][column] = colour
+      @rows[r-1][column-1] = colour
     end
   end
 
