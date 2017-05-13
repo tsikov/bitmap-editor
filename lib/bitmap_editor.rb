@@ -1,5 +1,3 @@
-require 'pry'
-
 class NoFileError < StandardError; end
 class FileNotFoundError < StandardError; end
 class UnknownCommandError < StandardError; end
@@ -13,9 +11,6 @@ class CommandArgumentError < StandardError; end
 class Canvas
   attr_accessor :rows
   def initialize(width, height)
-    # handles both strings and numbers
-    #raise CanvasSizeParameterError, "Width must be an integer, float given" unless Float(width) % 1 == 0
-    #raise CanvasSizeParameterError, "Height must be an integer, float given" unless Float(height) % 1 == 0
     unless [width, height].all? { |dim| dim.is_a?(Integer) }
       raise CanvasSizeParameterError, "Width and height must be integers"
     end
@@ -64,7 +59,6 @@ class Canvas
         start_column > @width or end_column > @width or row > @height
       raise DrawingOutOfCanvasError, "Cannot draw at #{start_column+1} #{end_column+1} #{row+1}"
     end
-    # FIXME: check for bad input
     (start_column..end_column).each do |c|
       @rows[row][c] = colour
     end
@@ -81,7 +75,6 @@ class Canvas
         column > @width or start_row > @height or end_row > @height
       raise DrawingOutOfCanvasError, "Cannot draw at #{column+1} #{start_row+1} #{end_row+1}"
     end
-    # FIXME: check for bad input
     (start_row..end_row).each do |r|
       @rows[r][column] = colour
     end
@@ -122,8 +115,6 @@ class BitmapEditor
       raise CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command"
     end
 
-    # Canvas.new expects integers as parameters
-    # FIXME: let's adopt the conventions that BE passes strings and Canvas tries to convert them, handle them, etc...
     canvas_dimentions = arguments(first_line).split.map(&:to_i)
     raise CanvasSizeParameterError, "Specify width and height of canvas" if canvas_dimentions.length != 2
     @canvas = Canvas.new(*canvas_dimentions)
