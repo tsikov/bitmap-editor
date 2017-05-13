@@ -1,2 +1,4 @@
 --color
 --format doc
+--default-path spec/
+--pattern test_*.rb
