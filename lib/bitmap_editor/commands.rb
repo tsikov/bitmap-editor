@@ -1,18 +1,14 @@
 class Command
   def self.check_args(args, line_number)
     if args.length < args_number
-      raise CommandArgumentError, "Please supply all arguments for the #{command_name} command on line #{line_number}"
+      raise CommandArgumentError, "Please supply all arguments for the #{self.to_s[0]} command on line #{line_number}"
     elsif args.length > args_number
-      raise CommandArgumentError, "You supplied too many arguments for the #{command_name} command on line #{line_number}"
+      raise CommandArgumentError, "You supplied too many arguments for the #{self.to_s[0]} command on line #{line_number}"
     end
   end
 end
 
 class LCommand < Command
-  def self.command_name
-    "L"
-  end
-
   def self.args_number
     3
   end
@@ -23,10 +19,6 @@ class LCommand < Command
 end
 
 class VCommand < Command
-  def self.command_name
-    "V"
-  end
-
   def self.args_number
     4
   end
@@ -37,10 +29,6 @@ class VCommand < Command
 end
 
 class HCommand < Command
-  def self.command_name
-    "H"
-  end
-
   def self.args_number
     4
   end
@@ -51,10 +39,6 @@ class HCommand < Command
 end
 
 class CCommand < Command
-  def self.command_name
-    "C"
-  end
-
   def self.args_number
     0
   end
@@ -65,10 +49,6 @@ class CCommand < Command
 end
 
 class SCommand < Command
-  def self.command_name
-    "S"
-  end
-
   def self.args_number
     0
   end
