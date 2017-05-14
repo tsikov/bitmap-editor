@@ -93,12 +93,19 @@ describe BitmapEditor do
       }.to raise_error(CommandArgumentError, "You supplied too many arguments for the L command on line 2")
     end
 
+    it "Raises an error if location is given as a float" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nL 1 2.2 G\nS"
+      expect {
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CommandArgumentError, 'Arguments ["1", "2.2", "G"] don\'t match template [/^[[:digit:]]+$/, /^[[:digit:]]+$/, /^[[:upper:]]$/]')
+    end
+
     it "Raises an error when drawing a single pixel if a colour is not provided" do
       # note the 4 instead of the capital letter
       create_file_with_contents "spec/testfile.txt", "I 4 3\nL 1 2 4\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
-      }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
+      }.to raise_error(CommandArgumentError, 'Arguments ["1", "2", "4"] don\'t match template [/^[[:digit:]]+$/, /^[[:digit:]]+$/, /^[[:upper:]]$/]')
     end
 
     it "Allows drawing of vertical lines" do
@@ -133,7 +140,7 @@ describe BitmapEditor do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nV 1 2 3 4\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
-      }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
+      }.to raise_error(CommandArgumentError, 'Arguments ["1", "2", "3", "4"] don\'t match template [/^[[:digit:]]+$/, /^[[:digit:]]+$/, /^[[:digit:]]+$/, /^[[:upper:]]$/]')
     end
 
     it "Raises an error if the user tries to draw outside the canvas with a vertical line" do
@@ -175,7 +182,7 @@ describe BitmapEditor do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 4\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
-      }.to raise_error(ColourNotProvidedError, "Colour must be a capital letter. 4 given")
+      }.to raise_error(CommandArgumentError, 'Arguments ["1", "2", "3", "4"] don\'t match template [/^[[:digit:]]+$/, /^[[:digit:]]+$/, /^[[:digit:]]+$/, /^[[:upper:]]$/]')
     end
 
     it "Raises an error if the user tries to draw outside of canvas with a horizontal line" do

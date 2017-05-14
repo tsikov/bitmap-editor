@@ -28,9 +28,6 @@ class Canvas
   def draw_pixel(column, row, colour)
     column = column.to_i
     row = row.to_i
-    unless /[[:upper:]]/.match(colour)
-      raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
-    end
     if column < 1 or row < 1 or column > @width or row > @height
       raise DrawingOutOfCanvasError, "Cannot draw at #{column} #{row}"
     end
@@ -41,9 +38,6 @@ class Canvas
     start_column = start_column.to_i
     end_column = end_column.to_i
     row = row.to_i
-    unless /[[:upper:]]/.match(colour)
-      raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
-    end
     if start_column < 1 or end_column < 1 or row < 1 or
         start_column > @width or end_column > @width or row > @height
       raise DrawingOutOfCanvasError, "Cannot draw at #{start_column} #{end_column} #{row}"
@@ -57,9 +51,6 @@ class Canvas
     column = column.to_i
     start_row = start_row.to_i
     end_row = end_row.to_i
-    unless /[[:upper:]]/.match(colour)
-      raise ColourNotProvidedError, "Colour must be a capital letter. #{colour} given"
-    end
     if column < 1 or start_row < 1 or end_row < 1 or
         column > @width or start_row > @height or end_row > @height
       raise DrawingOutOfCanvasError, "Cannot draw at #{column} #{start_row} #{end_row}"

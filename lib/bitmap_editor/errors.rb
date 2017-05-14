@@ -5,5 +5,4 @@ class CanvasSizeNotSpecifiedError < StandardError; end
 class CanvasSizeAlreadySpecified < StandardError; end
 class CanvasSizeArgumentError < StandardError; end
 class DrawingOutOfCanvasError < StandardError; end
-class ColourNotProvidedError < StandardError; end
 class CommandArgumentError < StandardError; end
