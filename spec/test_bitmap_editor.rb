@@ -27,7 +27,7 @@ describe BitmapEditor do
     end
 
     it "Raises an error if the canvas size is not specified initialy." do
-      create_file_with_contents "spec/testfile.txt", "V 4 3 2\nS"
+      create_file_with_contents "spec/testfile.txt", "V 4 3 2 G\nS"
       expect {
         BitmapEditor.new.run "spec/testfile.txt"
       }.to raise_error(CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command")
