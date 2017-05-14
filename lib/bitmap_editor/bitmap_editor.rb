@@ -1,3 +1,33 @@
+class Command
+  def initialize(canvas)
+    @canvas = canvas
+  end
+
+  def check_args(args, line_number)
+    if args.length < args_number
+      raise CommandArgumentError, "Please supply all arguments for the #{command_name} command on line #{line_number}"
+    elsif args.length > args_number
+      raise CommandArgumentError, "You supplied too many arguments for the #{command_name} command on line #{line_number}"
+    end
+  end
+end
+
+class LCommand < Command
+  #ARGS_TEMPLATE = /^\d+ \d+ [[:upper:]]$/
+  #ARGS_RANGES = [0..@canvas.row, 0..@canvas.width]
+  def command_name
+    "L"
+  end
+
+  def args_number
+    3
+  end
+
+  def execute(arguments)
+    @canvas.draw_pixel(*arguments)
+  end
+end
+
 class BitmapEditor
   attr_accessor :canvas
 
@@ -18,7 +48,7 @@ class BitmapEditor
     # We can now safely open the file
     file = File.open(file_name, "r")
 
-    # First step: set the canvas
+    # First step: initialize the canvas
     first_line =  file.readline.chomp
     if command(first_line) != "I"
       raise CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command"
@@ -28,19 +58,21 @@ class BitmapEditor
     raise CanvasSizeArgumentError, "Specify width and height of canvas" if canvas_dimentions.length != 2
     @canvas = Canvas.new(*canvas_dimentions)
 
+    l_command = LCommand.new(@canvas)
+
     file.each_with_index do |line, line_number|
       command = command(line)
-      line_number += 2 # we add 1 because we already too the first line, and another 1, because humans count from 1
+      # we add 1 because we already too the first line,
+      # and another 1, because humans count from 1
+      line_number += 2
 
       case command
       when 'I'
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
       when 'L'
         arguments = arguments(line).split
-        if arguments.length != 3
-          raise CommandArgumentError, "Please supply all arguments for the L command on line #{line_number}"
-        end
-        @canvas.draw_pixel(*arguments)
+        l_command.check_args(arguments, line_number)
+        l_command.execute(arguments)
       when 'V'
         arguments = arguments(line).split
         if arguments.length != 4
