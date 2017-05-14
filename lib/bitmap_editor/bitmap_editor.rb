@@ -13,8 +13,6 @@ class Command
 end
 
 class LCommand < Command
-  #ARGS_TEMPLATE = /^\d+ \d+ [[:upper:]]$/
-  #ARGS_RANGES = [0..@canvas.row, 0..@canvas.width]
   def command_name
     "L"
   end
@@ -25,6 +23,34 @@ class LCommand < Command
 
   def execute(arguments)
     @canvas.draw_pixel(*arguments)
+  end
+end
+
+class VCommand < Command
+  def command_name
+    "V"
+  end
+
+  def args_number
+    4
+  end
+
+  def execute(arguments)
+    @canvas.draw_vertical_line(*arguments)
+  end
+end
+
+class HCommand < Command
+  def command_name
+    "H"
+  end
+
+  def args_number
+    4
+  end
+
+  def execute(arguments)
+    @canvas.draw_horizontal_line(*arguments)
   end
 end
 
@@ -59,6 +85,8 @@ class BitmapEditor
     @canvas = Canvas.new(*canvas_dimentions)
 
     l_command = LCommand.new(@canvas)
+    v_command = VCommand.new(@canvas)
+    h_command = HCommand.new(@canvas)
 
     file.each_with_index do |line, line_number|
       command = command(line)
@@ -75,16 +103,12 @@ class BitmapEditor
         l_command.execute(arguments)
       when 'V'
         arguments = arguments(line).split
-        if arguments.length != 4
-          raise CommandArgumentError, "Please supply all arguments for the V command on line #{line_number}"
-        end
-        @canvas.draw_vertical_line(*arguments)
+        v_command.check_args(arguments, line_number)
+        v_command.execute(arguments)
       when 'H'
         arguments = arguments(line).split
-        if arguments.length != 4
-          raise CommandArgumentError, "Please supply all arguments for the H command on line #{line_number}"
-        end
-        @canvas.draw_horizontal_line(*arguments)
+        h_command.check_args(arguments, line_number)
+        h_command.execute(arguments)
       when 'C'
         @canvas.clear
       when 'S'
