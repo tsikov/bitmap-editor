@@ -1,5 +1,3 @@
-require 'pry'
-
 class Command
   def self.check_args(args, line_number)
     if args.length < args_number
@@ -81,7 +79,6 @@ class SCommand < Command
 end
 
 class BitmapEditor
-  attr_accessor :canvas
   COMMANDS = ['L', 'V', 'H', 'C', 'S']
 
   def command(line)
@@ -103,18 +100,18 @@ class BitmapEditor
 
     # First step: initialize the canvas
     first_line =  file.readline.chomp
+    canvas_dimentions = arguments(first_line).map(&:to_i)
     if command(first_line) != "I"
       raise CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command"
+    elsif canvas_dimentions.length != 2
+      raise CanvasSizeArgumentError, "Specify width and height of canvas"
     end
-
-    canvas_dimentions = arguments(first_line).map(&:to_i)
-    raise CanvasSizeArgumentError, "Specify width and height of canvas" if canvas_dimentions.length != 2
-    @canvas = Canvas.new(*canvas_dimentions)
+    canvas = Canvas.new(*canvas_dimentions)
 
     file.each_with_index do |line, line_number|
       command = command(line)
       arguments = arguments(line)
-      # we add 1 because we already too the first line,
+      # we add 1 because we already read the first line,
       # and another 1, because humans count from 1
       line_number += 2
 
@@ -126,7 +123,7 @@ class BitmapEditor
 
       klass = Object.const_get("#{command}Command")
       klass.check_args(arguments, line_number)
-      klass.execute(@canvas, arguments)
+      klass.execute(canvas, arguments)
     end
   end
 end
