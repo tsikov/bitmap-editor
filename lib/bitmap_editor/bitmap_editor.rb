@@ -1,9 +1,7 @@
-class Command
-  def initialize(canvas)
-    @canvas = canvas
-  end
+require 'pry'
 
-  def check_args(args, line_number)
+class Command
+  def self.check_args(args, line_number)
     if args.length < args_number
       raise CommandArgumentError, "Please supply all arguments for the #{command_name} command on line #{line_number}"
     elsif args.length > args_number
@@ -13,72 +11,72 @@ class Command
 end
 
 class LCommand < Command
-  def command_name
+  def self.command_name
     "L"
   end
 
-  def args_number
+  def self.args_number
     3
   end
 
-  def execute(arguments)
-    @canvas.draw_pixel(*arguments)
+  def self.execute(canvas, arguments)
+    canvas.draw_pixel(*arguments)
   end
 end
 
 class VCommand < Command
-  def command_name
+  def self.command_name
     "V"
   end
 
-  def args_number
+  def self.args_number
     4
   end
 
-  def execute(arguments)
-    @canvas.draw_vertical_line(*arguments)
+  def self.execute(canvas, arguments)
+    canvas.draw_vertical_line(*arguments)
   end
 end
 
 class HCommand < Command
-  def command_name
+  def self.command_name
     "H"
   end
 
-  def args_number
+  def self.args_number
     4
   end
 
-  def execute(arguments)
-    @canvas.draw_horizontal_line(*arguments)
+  def self.execute(canvas, arguments)
+    canvas.draw_horizontal_line(*arguments)
   end
 end
 
 class CCommand < Command
-  def command_name
+  def self.command_name
     "C"
   end
 
-  def args_number
+  def self.args_number
     0
   end
 
-  def execute(arguments)
-    @canvas.clear
+  def self.execute(canvas, arguments)
+    canvas.clear
   end
 end
 
 class SCommand < Command
-  def command_name
+  def self.command_name
     "S"
   end
 
-  def args_number
+  def self.args_number
     0
   end
 
-  def execute(arguments)
-    @canvas.print
+  def self.execute(canvas, arguments)
+    canvas.print
   end
 end
 
@@ -112,12 +110,6 @@ class BitmapEditor
     raise CanvasSizeArgumentError, "Specify width and height of canvas" if canvas_dimentions.length != 2
     @canvas = Canvas.new(*canvas_dimentions)
 
-    l_command = LCommand.new(@canvas)
-    v_command = VCommand.new(@canvas)
-    h_command = HCommand.new(@canvas)
-    c_command = CCommand.new(@canvas)
-    s_command = SCommand.new(@canvas)
-
     file.each_with_index do |line, line_number|
       command = command(line)
       arguments = arguments(line)
@@ -129,20 +121,20 @@ class BitmapEditor
       when 'I'
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
       when 'L'
-        l_command.check_args(arguments, line_number)
-        l_command.execute(arguments)
+        LCommand.check_args(arguments, line_number)
+        LCommand.execute(@canvas, arguments)
       when 'V'
-        v_command.check_args(arguments, line_number)
-        v_command.execute(arguments)
+        VCommand.check_args(arguments, line_number)
+        VCommand.execute(@canvas, arguments)
       when 'H'
-        h_command.check_args(arguments, line_number)
-        h_command.execute(arguments)
+        HCommand.check_args(arguments, line_number)
+        HCommand.execute(@canvas, arguments)
       when 'C'
-        c_command.check_args(arguments, line_number)
-        c_command.execute(arguments)
+        CCommand.check_args(arguments, line_number)
+        CCommand.execute(@canvas, arguments)
       when 'S'
-        s_command.check_args(arguments, line_number)
-        s_command.execute(arguments)
+        SCommand.check_args(arguments, line_number)
+        SCommand.execute(@canvas, arguments)
       else
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"
       end
