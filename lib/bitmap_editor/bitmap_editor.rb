@@ -120,6 +120,7 @@ class BitmapEditor
 
     file.each_with_index do |line, line_number|
       command = command(line)
+      arguments = arguments(line)
       # we add 1 because we already too the first line,
       # and another 1, because humans count from 1
       line_number += 2
@@ -128,23 +129,18 @@ class BitmapEditor
       when 'I'
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
       when 'L'
-        arguments = arguments(line)
         l_command.check_args(arguments, line_number)
         l_command.execute(arguments)
       when 'V'
-        arguments = arguments(line)
         v_command.check_args(arguments, line_number)
         v_command.execute(arguments)
       when 'H'
-        arguments = arguments(line)
         h_command.check_args(arguments, line_number)
         h_command.execute(arguments)
       when 'C'
-        arguments = arguments(line)
         c_command.check_args(arguments, line_number)
         c_command.execute(arguments)
       when 'S'
-        arguments = arguments(line)
         s_command.check_args(arguments, line_number)
         s_command.execute(arguments)
       else
