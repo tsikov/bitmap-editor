@@ -54,6 +54,34 @@ class HCommand < Command
   end
 end
 
+class CCommand < Command
+  def command_name
+    "C"
+  end
+
+  def args_number
+    0
+  end
+
+  def execute(arguments)
+    @canvas.clear
+  end
+end
+
+class SCommand < Command
+  def command_name
+    "S"
+  end
+
+  def args_number
+    0
+  end
+
+  def execute(arguments)
+    @canvas.print
+  end
+end
+
 class BitmapEditor
   attr_accessor :canvas
 
@@ -62,7 +90,7 @@ class BitmapEditor
   end
 
   def arguments(line)
-    line[2..-1]
+    line[2..-1].nil? ? [] : line[2..-1].split
   end
 
   def run(file_name)
@@ -80,13 +108,15 @@ class BitmapEditor
       raise CanvasSizeNotSpecifiedError, "Commands must start with a canvas size command"
     end
 
-    canvas_dimentions = arguments(first_line).split.map(&:to_i)
+    canvas_dimentions = arguments(first_line).map(&:to_i)
     raise CanvasSizeArgumentError, "Specify width and height of canvas" if canvas_dimentions.length != 2
     @canvas = Canvas.new(*canvas_dimentions)
 
     l_command = LCommand.new(@canvas)
     v_command = VCommand.new(@canvas)
     h_command = HCommand.new(@canvas)
+    c_command = CCommand.new(@canvas)
+    s_command = SCommand.new(@canvas)
 
     file.each_with_index do |line, line_number|
       command = command(line)
@@ -98,21 +128,25 @@ class BitmapEditor
       when 'I'
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
       when 'L'
-        arguments = arguments(line).split
+        arguments = arguments(line)
         l_command.check_args(arguments, line_number)
         l_command.execute(arguments)
       when 'V'
-        arguments = arguments(line).split
+        arguments = arguments(line)
         v_command.check_args(arguments, line_number)
         v_command.execute(arguments)
       when 'H'
-        arguments = arguments(line).split
+        arguments = arguments(line)
         h_command.check_args(arguments, line_number)
         h_command.execute(arguments)
       when 'C'
-        @canvas.clear
+        arguments = arguments(line)
+        c_command.check_args(arguments, line_number)
+        c_command.execute(arguments)
       when 'S'
-        @canvas.print
+        arguments = arguments(line)
+        s_command.check_args(arguments, line_number)
+        s_command.execute(arguments)
       else
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"
       end

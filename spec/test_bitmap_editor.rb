@@ -198,17 +198,11 @@ describe BitmapEditor do
       }.to output(output).to_stdout
     end
 
-    it "Data after the clear command is ignored" do
+    it "Raises an error for the clearing command when too many arguments are provided" do
       create_file_with_contents "spec/testfile.txt", "I 4 3\nH 1 2 3 G\nC bla bla\nS"
-      output = <<~EOF
-      OOOO
-      OOOO
-      OOOO
-      EOF
       expect {
-        be = BitmapEditor.new
-        be.run "spec/testfile.txt"
-      }.to output(output).to_stdout
+        BitmapEditor.new.run "spec/testfile.txt"
+      }.to raise_error(CommandArgumentError, "You supplied too many arguments for the C command on line 3")
     end
 
     it "Can draw canvas to STDOUT" do
