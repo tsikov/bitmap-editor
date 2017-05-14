@@ -41,7 +41,15 @@ OWOOO
 OWOOO
 ```
 
-## Run tests
+## Development
+
+To add a new command, simply inherit from the the `Command` class and
+implement the interface. The name of your command must start with the
+a letter and end with "Command" (e.g. `XCommand`). Don't forget to add
+the command symbol in the `COMMANDS` constant inside the `BitmapEditor`
+class.
+
+## Running tests
 
 `>rspec`
 
