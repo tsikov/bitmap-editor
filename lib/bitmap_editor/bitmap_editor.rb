@@ -82,6 +82,7 @@ end
 
 class BitmapEditor
   attr_accessor :canvas
+  COMMANDS = ['L', 'V', 'H', 'C', 'S']
 
   def command(line)
     line[0]
@@ -117,27 +118,15 @@ class BitmapEditor
       # and another 1, because humans count from 1
       line_number += 2
 
-      case command
-      when 'I'
+      if command == 'I'
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
-      when 'L'
-        LCommand.check_args(arguments, line_number)
-        LCommand.execute(@canvas, arguments)
-      when 'V'
-        VCommand.check_args(arguments, line_number)
-        VCommand.execute(@canvas, arguments)
-      when 'H'
-        HCommand.check_args(arguments, line_number)
-        HCommand.execute(@canvas, arguments)
-      when 'C'
-        CCommand.check_args(arguments, line_number)
-        CCommand.execute(@canvas, arguments)
-      when 'S'
-        SCommand.check_args(arguments, line_number)
-        SCommand.execute(@canvas, arguments)
-      else
+      elsif !COMMANDS.include?(command)
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"
       end
+
+      klass = Object.const_get("#{command}Command")
+      klass.check_args(arguments, line_number)
+      klass.execute(@canvas, arguments)
     end
   end
 end
