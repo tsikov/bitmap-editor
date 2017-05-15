@@ -1,5 +1,5 @@
 class BitmapEditor
-  COMMANDS = ['L', 'V', 'H', 'C', 'S']
+  NON_INITIALIZATION_COMMANDS = ['L', 'V', 'H', 'C', 'S']
 
   def command(line)
     line[0]
@@ -37,7 +37,7 @@ class BitmapEditor
 
       if command == 'I'
         raise CanvasSizeAlreadySpecified, "Canvas size specified for the second time on line #{line_number}"
-      elsif !COMMANDS.include?(command)
+      elsif !NON_INITIALIZATION_COMMANDS.include?(command)
         raise UnknownCommandError, "Unknown command #{command} on line #{line_number}"
       end
 
