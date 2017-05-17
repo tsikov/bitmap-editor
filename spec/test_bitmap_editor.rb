@@ -237,6 +237,19 @@ describe BitmapEditor do
         be.run "spec/testfile.txt"
       }.to output(output).to_stdout
     end
+
+    it "Can draw the Fill Command" do
+      create_file_with_contents "spec/testfile.txt", "I 4 3\nF 1 1 B\nS"
+      output = <<~EOF
+      BBBB
+      BBBB
+      BBBB
+      EOF
+      expect {
+        be = BitmapEditor.new
+        be.run "spec/testfile.txt"
+      }.to output(output).to_stdout
+    end
   end
 end
 

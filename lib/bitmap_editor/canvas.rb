@@ -21,6 +21,41 @@ class Canvas
     }
   end
 
+  def fill_area(area, colour)
+    area.each { |c,r| draw_pixel(c,r, colour) }
+  end
+
+  def neighbours_coords(column, row)
+    neighbours = []
+    neighbours << [column-1, row] if column != 0
+    neighbours << [column+1, row] if column != @height
+    neighbours << [column, row-1] if row != 0
+    neighbours << [column, row+1] if row != @width
+    neighbours
+  end
+
+  def same_colour_neighbours(column, row, colour)
+    ncoods = neighbours_coords(column, row)
+    ncoods = ncoods.select { |column, row| pixel_at(column,row) == colour }
+    ncoods
+  end
+
+  def pixel_with_neighbours(column, row)
+    colour = pixel_at(column, row)
+    area = [[column, row]]
+    area << same_colour_neighbours(column, row, colour) # unexplored
+    area
+  end
+
+  def get_fill_area(column, row, area=[])
+    area << pixel_with_neighbours(column, row)
+    new_area = []
+    area.each do |c, r|
+      new_area << pixel_with_neighbours(c, r) - area
+    end
+    new_area
+  end
+
   def pixel_at(column, row)
     @rows[row-1][column-1]
   end

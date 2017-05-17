@@ -1,5 +1,5 @@
 class BitmapEditor
-  NON_INITIALIZATION_COMMANDS = ['L', 'V', 'H', 'C', 'S']
+  NON_INITIALIZATION_COMMANDS = ['L', 'V', 'H', 'C', 'S', 'F']
 
   def command(line)
     line[0]

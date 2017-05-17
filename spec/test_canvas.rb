@@ -46,6 +46,35 @@ context "Canvas" do
     end
   end
 
+  context "#neighbours_coord" do
+    it "should return neighbour coordinates" do
+      canvas = Canvas.new(3,3)
+      ncoords = canvas.neighbours_coords(0,0)
+      expect(ncoords).to match_array([[1,0], [0,1]])
+      ncoords = canvas.neighbours_coords(1,1)
+      expect(ncoords).to match_array([[1,0], [0,1], [2,1], [1,2]])
+    end
+  end
+
+  context "#same_colour_neighbours" do
+    it "should return neighbour coordinates of the same colour" do
+      canvas = Canvas.new(3,3)
+      canvas.draw_pixel(1, 2, "B")
+      ncoords = canvas.same_colour_neighbours(0,0, "O")
+      expect(ncoords).to match_array([[1,0], [0,1]])
+      ncoords = canvas.same_colour_neighbours(1,1, "O")
+      expect(ncoords).to match_array([[1,0], [0,1], [2,1]])
+    end
+  end
+
+  context "#get_fill_area" do
+    it "should return the adjacent pixels of the same colour" do
+      canvas = Canvas.new(2, 2)
+      result = canvas.get_fill_area(0,0)
+      expect(result).to match_array([[0,0], [0,1], [1,0], [1,1]])
+    end
+  end
+
   it "Should create itself on initialization with the right dimentions" do
     canvas = Canvas.new(2, 3)
     expect(canvas.rows.length).to eq(3)    # height

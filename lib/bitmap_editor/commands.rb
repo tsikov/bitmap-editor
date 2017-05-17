@@ -11,6 +11,21 @@ class Command
   end
 end
 
+class FCommand < Command
+  def self.args_number
+    3
+  end
+
+  def self.args_template
+    [/^[[:digit:]]+$/, /^[[:digit:]]+$/, /^[[:upper:]]$/]
+  end
+
+  def self.execute(canvas, arguments)
+    area = canvas.get_fill_area(*arguments)
+    canvas.fill_area(area, arguments.last)
+  end
+end
+
 class LCommand < Command
   def self.args_number
     3
